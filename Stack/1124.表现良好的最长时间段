@@ -4,7 +4,7 @@ public static int longestWPI(int[] hours){
         for (int i = 0; i < hours.length; i++) {
             array[i] = hours[i] > 8 ? 1:-1;
         }
-        for (int i = 0; i < array.length; i++) {
+        for (int i = 0; i < array.length; i++) {  
             int sum = 0;
             for(int j = i;j < array.length; j++){
                 sum += array[j];

@@ -1,0 +1,52 @@
+ 思路：
+ 1.将根结点入栈
+ 2.peek栈顶
+ 3.如果栈顶元素为叶子结点，直接访问
+ 4.如果不是叶子结点，先入栈right结点，再入栈left结点，然后判断left和right结点，如果是则断开。
+ 
+ 重点思路：每当遇到一个叶子结点就访问（先判断是否访问过）；每进栈一个元素要判断该元素是否为叶子结点，是的话要断开。
+ 
+ public static List<Integer> post(TreeNode root){
+        List<Integer> list = new ArrayList<>();
+        Set<TreeNode> set = new HashSet<>();
+        if(root != null){
+            Stack<TreeNode> stack = new Stack<>();
+            //根结点入栈
+            stack.push(root);
+            while (!stack.isEmpty()){
+                //peek而不是pop
+                TreeNode treeNode = stack.peek();
+                //判断是否为叶子结点
+                if(judge(treeNode)) {
+                    // 是否已经访问（添加）了该叶子结点的值
+                    if(!set.contains(treeNode)) {
+                        set.add(treeNode);
+                        list.add(treeNode.data);
+                    }
+                    stack.pop();
+                }
+                else if(treeNode.left!=null&&treeNode.right!=null){
+                    stack.push(treeNode.right);
+                    stack.push(treeNode.left);
+                    // 如果儿子结点为叶子结点，则断开
+                    if (judge(treeNode.left)) treeNode.left = null;
+                    if (judge(treeNode.right)) treeNode.right = null;
+                }
+                else if(treeNode.left == null && treeNode.right != null){
+                    stack.push(treeNode.right);
+                    if(judge(treeNode.right)) treeNode.right = null;
+                }
+                else if(treeNode.left != null && treeNode.right == null){
+                    stack.push(treeNode.left);
+                    if(judge(treeNode.left)) treeNode.left = null;
+                }
+            }
+        }
+        return list;
+    }
+    
+    // 判断该结点是否为叶子结点
+    public static boolean judge(TreeNode treeNode){
+        if(treeNode.left == null && treeNode.right == null) return true;
+        else return false;
+    }

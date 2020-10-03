@@ -1,0 +1,16 @@
+1. 哈希映射
+  思路：
+    1.如高票答案所示：利用map，key存放当前元素值，value存放索引
+    2.遍历整个数组，对于当前索引为i、值为x的元素，查找map中是否存在包含tagert-x的元素，
+    3.存在则返回该元素对应的value即索引
+    
+  代码：
+      public static int[] twoSum(int[] nums, int target) {
+            Map<Integer,Integer> map = new HashMap();
+            for (int i = 0; i < nums.length; i++) {
+                if(map.containsKey(target-nums[i]))
+                    return new int[]{map.get(target-nums[i]),i};
+                else map.put(nums[i],i);
+            }
+            throw new IllegalArgumentException("未能找到满足条件的元素");
+        }

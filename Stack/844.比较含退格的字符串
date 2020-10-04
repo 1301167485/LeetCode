@@ -1,0 +1,57 @@
+1.栈退法
+  思路：
+    1.遇到#就出栈
+    2.遇到其他就进栈
+    其他情况：出栈前判断是否栈空
+    3.字符串的比较就利用两个栈一直pop，比较pop出的值，两方同时为空则返回ture，否则返回false。
+  时间复杂度：O(m+n)，m、n为字符串长度
+  空间复杂度：O(m+n)
+    
+  代码1（第一次ace代码不规范）:
+      public boolean backspaceCompare(String S, String T) {
+          return compore(judge(S),judge(T));
+      }
+      // 将一个String进行压栈
+      public static Stack judge(String str){
+          Stack<Character> stack = new Stack<>();
+          for (int i = 0; i < str.length(); i++) {
+              char c = str.charAt(i);
+              if(c == '#' && !stack.isEmpty())stack.pop();
+              else if(c != '#') stack.push(c);
+          }
+          return stack;
+      }
+      // 两个栈的比较
+      public static boolean compore(Stack st1,Stack st2){
+          boolean bl = true;
+          while (!st1.isEmpty()&&!st2.isEmpty()) {
+              if ((st1.pop()==st2.pop()) == false )
+                  return false;
+          }
+          if(st1.isEmpty()&&st2.isEmpty())
+              return true;
+          else return false;
+      }
+      
+
+          
+    代码2（官方题解同一个思路，规范化代码）
+      时间复杂度：O(m+n)，m、n为字符串长度
+      空间复杂度：O(m+n)
+      
+      public boolean backspaceCompare(String S, String T) {
+          return build(S).equals(build(T));
+      }
+
+      public String build(String S) {
+          Stack<Character> ans = new Stack();
+          for (char c: S.toCharArray()) {
+              if (c != '#')
+                  ans.push(c);
+              else if (!ans.empty())
+                  ans.pop();
+          }
+          return String.valueOf(ans);
+      }
+      
+      

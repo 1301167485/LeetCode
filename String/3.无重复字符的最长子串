@@ -1,0 +1,72 @@
+1.题目描述：https://leetcode-cn.com/problems/longest-substring-without-repeating-characters/
+  给定一个字符串，请你找出其中不含有重复字符的 最长子串 的长度。
+
+  示例 1:
+
+  输入: "abcabcbb"
+  输出: 3 
+  解释: 因为无重复字符的最长子串是 "abc"，所以其长度为 3。
+  示例 2:
+
+  输入: "bbbbb"
+  输出: 1
+  解释: 因为无重复字符的最长子串是 "b"，所以其长度为 1。
+  示例 3:
+
+  输入: "pwwkew"
+  输出: 3
+  解释: 因为无重复字符的最长子串是 "wke"，所以其长度为 3。
+       请注意，你的答案必须是 子串 的长度，"pwke" 是一个子序列，不是子串。
+
+2.思路1：暴力求解：
+  思路2：滑动窗口（个人感觉比较像双指针法）：
+          1）初始两个指针start和end在字符串第一个位置，利用map；
+          2）不断向后移动end指针访问后续的元素；
+          3）如果当前访问的元素不在map中，则表明当前子串无重复元素，更新max和map，继续向后遍历；
+          4）如果map有该元素，则判断是在start之前还是之后，在start之前则与当前子串（索引为start-end）无关，如果在子串内部，则更新start，max，map。
+          5）直到end遍历完整个字符串。
+
+3.代码：
+  1).暴力求解:
+      public int lengthOfLongestSubstring(String s) {
+        List<Character> list = new ArrayList<>();
+        char[] chars = s.toCharArray();
+        int max = 0;
+        if(s.length() <= 1) return s.length();
+        for (int i = 0; i < chars.length; i++) {
+            list.removeAll(list);
+            list.add(chars[i]);
+            int count = 1;
+            for (int j = i + 1; j < chars.length; j++) {
+                if (list.contains(chars[j])) {
+                    max = (max > count ? max : count);
+                    break;
+                } else {
+                    list.add(chars[j]);
+                    count++;
+                    max = (max > count ? max : count);
+                }
+            }
+        }
+        return max;
+    }
+   
+  2)滑动窗口：
+       public static int lengthOfLongestSubstring(String s) {
+        
+        Map<Character, Integer> map = new HashMap<>();
+        int max = 0, n = s.length();
+        int start = 0;
+        for (int end = 0; end < n; end++) {
+            char c = s.charAt(end);
+            if (map.containsKey(c)) {
+                // 查看当前元素是否遍历给，如果在start之前遍历，则对当前子串没有影响，如果是在字串内部重复，则令start等于该位置
+                start = Math.max(map.get(c), start);  
+            }
+            max = Math.max(max, end - start + 1);
+            // end + 1 是取每次都从下一个元素开始
+            map.put(c, end + 1);
+        }
+        return max;
+      }
+ 

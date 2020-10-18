@@ -1,0 +1,77 @@
+1.题目描述：https://leetcode-cn.com/problems/spiral-matrix-ii/
+  给定一个正整数 n，生成一个包含 1 到 n2 所有元素，且元素按顺时针顺序螺旋排列的正方形矩阵。
+
+  示例:
+
+  输入: 3
+  输出:
+  [
+   [ 1, 2, 3 ],
+   [ 8, 9, 4 ],
+   [ 7, 6, 5 ]
+  ]
+
+2.思路：
+  1）模拟整个过程，或者称之为剥外壳，顺时针剥掉矩阵的外壳（最外层）
+  2）top层：从左到右一次遍历
+  3）right层：从上到下依次遍历
+  4）bootom层：从右向左依次遍历
+  5）left层：从下到上依次遍历
+ 
+3.代码：
+      public static int[][]  generateMatrix(int n){
+        int[][] result = new int [n][n];
+        int top = 0;
+        int bottom = n;
+        int left = 0;
+        int right = n;
+        int temp = 1;
+        int size = n*n;
+        while(temp <= size){
+            // 遍历top层，从左到右，即从left到right
+            if (temp > size) break;
+            for (int i = left; i < right; i++) {
+                result[top][i] = temp++;
+            }
+            top++;
+            // 遍历right层，从上到下，即从top到bootom
+            if (temp > size) break;
+            for(int j = top;j < bottom;j++){
+                result[j][right-1] = temp++;
+            }
+            right--;
+            // 遍历botten层，从右到左，即right到left
+            if (temp > size) break;
+            for(int k = right -1; k >= left ; k-- ){
+                result[bottom-1][k] = temp++;
+            }
+            bottom--;
+            // 遍历left层，从下到上，即botten到top
+            if (temp > size) break;
+            for(int x = bottom-1; x >= top ; x--){
+                result[x][left] = temp++;
+            }
+            left++;
+        }
+        return result;
+    }
+    
+    
+  4.优化后的代码：
+     public int[][] generateMatrix(int n) {
+        int l = 0, r = n - 1, t = 0, b = n - 1;
+        int[][] mat = new int[n][n];
+        int num = 1, tar = n * n;
+        while(num <= tar){
+            for(int i = l; i <= r; i++) mat[t][i] = num++; // left to right.
+            t++;
+            for(int i = t; i <= b; i++) mat[i][r] = num++; // top to bottom.
+            r--;
+            for(int i = r; i >= l; i--) mat[b][i] = num++; // right to left.
+            b--;
+            for(int i = b; i >= t; i--) mat[i][l] = num++; // bottom to top.
+            l++;
+        }
+        return mat;
+    }
+

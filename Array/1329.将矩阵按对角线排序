@@ -1,0 +1,55 @@
+1.题目描述：https://leetcode-cn.com/problems/sort-the-matrix-diagonally/
+
+2.思路:
+  1）先遍历上半矩阵
+  2）利用list，每次将一个对角线添加进list
+  3）对list进行排序，再按步骤2中添加对角线元素的遍历顺序为每个位置的元素重新赋值
+  3）遍历下半矩阵
+ 
+3）代码：
+  public static int[][] diagonalSort(int[][] mat) {
+          int row = mat.length;
+          int col = mat[0].length;
+          int[][] result = new int[row][col];
+          // 处理上半矩阵
+          for (int i = 0; i < col; i++) {
+              List<Integer> list = new ArrayList<>();
+              // 定义遍历的位置下标
+              int tempRow = 0;
+              int tempCol = i;
+              //按对角线的顺序添加进list
+              while (tempCol < col && tempRow < row) {
+                  list.add(mat[tempRow++][tempCol++]);
+              }
+              // list排序
+              list.sort((a, b) -> {
+                  return a - b;
+              });
+              tempRow = 0;
+              tempCol = i;
+              int index = 0;
+              // 按对角线元素顺序进行重新赋值
+              while (tempCol < col && tempRow < row) {
+                  result[tempRow++][tempCol++] = list.get(index++);
+              }
+          }
+          // 处理下半矩阵
+          for (int i = 1; i < row; i++) {
+              List<Integer> list = new ArrayList<>();
+              int tempRow = i;
+              int tempCol = 0;
+              while (tempCol < col && tempRow < row) {
+                  list.add(mat[tempRow++][tempCol++]);
+              }
+              list.sort((a, b) -> {
+                  return a - b;
+              });
+              tempRow = i;
+              tempCol = 0;
+              int index = 0;
+              while (tempCol < col && tempRow < row) {
+                  result[tempRow++][tempCol++] = list.get(index++);
+              }
+          }
+          return result;
+      }

@@ -1,0 +1,40 @@
+1.题目描述：https://leetcode-cn.com/problems/jump-game/submissions/
+  给定一个非负整数数组，你最初位于数组的第一个位置。
+
+  数组中的每个元素代表你在该位置可以跳跃的最大长度。
+
+  判断你是否能够到达最后一个位置。
+
+  示例 1:
+
+  输入: [2,3,1,1,4]
+  输出: true
+  解释: 我们可以先跳 1 步，从位置 0 到达 位置 1, 然后再从位置 1 跳 3 步到达最后一个位置。
+  示例 2:
+
+  输入: [3,2,1,0,4]
+  输出: false
+  解释: 无论怎样，你总会到达索引为 3 的位置。但该位置的最大跳跃长度是 0 ， 所以你永远不可能到达最后一个位置。
+
+
+2.思路：双指针（从后往前遍历）
+  1）从数组最后一个元素nums[end]开始访问，判断之前的元素start能否达到end元素,
+  2）如果能到达，则更新end为start，当前end继续进行上述操作；如果达不到end表明之前的元素都无法到达当前元素，返回false
+  3）遍历完所有元素，表明存在路径能到达末尾，返回true
+  
+
+3. 代码：
+      public boolean canJump(int[] nums) {
+        int len = nums.length;
+        int end = len - 1;
+        int start = end -1;
+        while(start >= 0){
+                if((nums[start]+start) >= end){
+                    end = start;
+                    start = end-1;
+                }
+                // 依次访问前面的元素，直到数组越界表明都找不到
+                else if(--start == -1) return false;
+        }
+        return true;
+    }

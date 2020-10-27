@@ -55,6 +55,47 @@ public class TreeNode {
         return list;
 
     }
+    // 非递归遍历
+    class Solution{
+     public List<Integer> postorderTraversal(TreeNode root){
+        List<Integer> list = new ArrayList<>();
+        Set<TreeNode> set = new HashSet<>();
+        if(root != null){
+            Stack<TreeNode> stack = new Stack<>();
+            stack.push(root);
+            while (!stack.isEmpty()){
+                TreeNode treeNode = stack.peek();
+                if(judge(treeNode)) {
+                    if(!set.contains(treeNode)) {
+                        set.add(treeNode);
+                        list.add(treeNode.val);
+                    }
+                    stack.pop();
+                }
+                else if(treeNode.left!=null&&treeNode.right!=null){
+                    stack.push(treeNode.right);
+                    stack.push(treeNode.left);
+                    if (judge(treeNode.left)) treeNode.left = null;
+                    if (judge(treeNode.right)) treeNode.right = null;
+                }
+                else if(treeNode.left == null && treeNode.right != null){
+                    stack.push(treeNode.right);
+                    if(judge(treeNode.right)) treeNode.right = null;
+                }
+                else if(treeNode.left != null && treeNode.right == null){
+                    stack.push(treeNode.left);
+                    if(judge(treeNode.left)) treeNode.left = null;
+                }
+            }
+        }
+        return list;
+     }
+     // 判断当前结点是否为叶子结点
+    public static boolean judge(TreeNode treeNode){
+        if(treeNode.left == null && treeNode.right == null) return true;
+        else return false;
+    }
+}
 
 //    int val;
 //    TreeNode left;

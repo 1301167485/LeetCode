@@ -38,17 +38,17 @@
                 else if(treeNode.left!=null&&treeNode.right!=null){
                     stack.push(treeNode.right);
                     stack.push(treeNode.left);
-                    // 如果儿子结点为叶子结点，则断开
-                    if (judge(treeNode.left)) treeNode.left = null;
-                    if (judge(treeNode.right)) treeNode.right = null;
+                    // 断开儿子节点
+                    treeNode.left = null;
+                    treeNode.right = null;
                 }
                 else if(treeNode.left == null && treeNode.right != null){
                     stack.push(treeNode.right);
-                    if(judge(treeNode.right)) treeNode.right = null;
+                    treeNode.right = null;
                 }
                 else if(treeNode.left != null && treeNode.right == null){
                     stack.push(treeNode.left);
-                    if(judge(treeNode.left)) treeNode.left = null;
+                    treeNode.left = null;
                 }
             }
         }

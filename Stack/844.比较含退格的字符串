@@ -22,16 +22,14 @@
           return stack;
       }
       // 两个栈的比较
-      public static boolean compore(Stack st1,Stack st2){
-          boolean bl = true;
-          while (!st1.isEmpty()&&!st2.isEmpty()) {
-              if ((st1.pop()==st2.pop()) == false )
-                  return false;
-          }
-          if(st1.isEmpty()&&st2.isEmpty())
-              return true;
-          else return false;
-      }
+    public static boolean compore(Stack st1,Stack st2){
+        boolean bl = true;
+        while (!st1.isEmpty()&&!st2.isEmpty()) {
+            if ((st1.pop()==st2.pop()) == false )
+                return false;
+        }
+        return st1.isEmpty()&&st2.isEmpty();
+    }
       
 
           

@@ -1,0 +1,54 @@
+1.题目描述：https://leetcode-cn.com/problems/binary-tree-level-order-traversal/
+给你一个二叉树，请你返回其按 层序遍历 得到的节点值。 （即逐层地，从左到右访问所有节点）。
+
+  示例：
+  二叉树：[3,9,20,null,null,15,7],
+
+      3
+     / \
+    9  20
+      /  \
+     15   7
+  返回其层次遍历结果：
+
+  [
+    [3],
+    [9,20],
+    [15,7]
+  ]
+
+2.思路：广度优先遍历（本题困难之处在于，每一层的元素都要用一个list，把多个list再加入到返回的结果之中，这与普通的层序遍历并不相同）
+
+3.代码：
+class Solution {
+    public List<List<Integer>> levelOrder(TreeNode root) {
+        List<List<Integer>> ret = new ArrayList<List<Integer>>();
+        if (root == null) {
+            return ret;
+        }
+
+        Queue<TreeNode> queue = new LinkedList<TreeNode>();
+        queue.offer(root);
+        while (!queue.isEmpty()) {
+            List<Integer> level = new ArrayList<Integer>();   // level中只存放某一层的所有元素，利用size不断的poll会让该层元素不断的出队
+            int currentLevelSize = queue.size();
+            for (int i = 1; i <= currentLevelSize; ++i) {
+                TreeNode node = queue.poll();
+                level.add(node.val);
+                if (node.left != null) {
+                    queue.offer(node.left);
+                }
+                if (node.right != null) {
+                    queue.offer(node.right);
+                }
+            }
+            ret.add(level);
+        }
+        
+        return ret;
+    }
+}
+
+
+4.感悟：今天是2020年10月29日，异常的抑郁与焦虑，刚刚跳绳的时候眼泪都快掉下来了。今早看到层序遍历觉得很容易，但是要给每层元素添加一个list着实没想出来解决方法，最后看了官方解答。
+唉，加油把，但行好事。

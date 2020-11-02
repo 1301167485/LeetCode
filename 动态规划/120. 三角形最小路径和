@@ -1,0 +1,42 @@
+1.题目描述：https://leetcode-cn.com/problems/triangle/
+
+给定一个三角形，找出自顶向下的最小路径和。每一步只能移动到下一行中相邻的结点上。
+相邻的结点 在这里指的是 下标 与 上一层结点下标 相同或者等于 上一层结点下标 + 1 的两个结点。
+
+例如，给定三角形：
+
+[
+     [2],
+    [3,4],
+   [6,5,7],
+  [4,1,8,3]
+]
+自顶向下的最小路径和为 11（即，2 + 3 + 5 + 1 = 11）。
+
+
+
+2.思路：动态规划（自底向上）
+  1）首先将三角形转换为如下形状，更加容易判别
+            [2],
+            [3,4],
+            [6,5,7],
+            [4,1,8,3]
+  2）自底向上，dp[i][j] = min ( dp[i+1][j], dp[i+1][j+1] )，即当前位置的最小值取决于正下和右下的元素的最小值。
+  3）为什么不用自顶向下？ 自顶向下需要考虑边界值，每行第一个元素只取决于正上方元素，每行最后一个元素取决于左上方元素，而其他元素取决于正上方和左上方的最小值。
+  如果是自底向上，当前元素只需考虑正下方和右下方元素。
+  
+  
+  
+3.代码：（因为没有新建数组，直接在原有的list上进行重写覆盖，所以空间复杂度低，时间复杂度高）
+      public int minimumTotal(List<List<Integer>> triangle) {
+        int size = triangle.size();
+        if(size == 1) return triangle.get(0).get(0);
+        for(int i = size-2; i >= 0; i--){
+            for(int j = 0; j <= i; j++){
+                int min = Math.min(triangle.get(i+1).get(j+1),triangle.get(i+1).get(j));
+                int temp = triangle.get(i).get(j);
+                triangle.get(i).set(j,temp + min);
+            }
+        }
+        return triangle.get(0).get(0);
+    }

@@ -1,0 +1,46 @@
+1.题目描述：https://leetcode-cn.com/problems/longest-palindromic-substring/
+
+  给定一个字符串 s，找到 s 中最长的回文子串。你可以假设 s 的最大长度为 1000。
+
+  示例 1：
+
+  输入: "babad"
+  输出: "bab"
+  注意: "aba" 也是一个有效答案。
+  示例 2：
+
+  输入: "cbbd"
+  输出: "bb"
+
+  回文子串：从前往后和从后往前一样的字符串
+  
+2.思路：动态规划
+  1）[i,j]表示从原字符串s的下标i开始到j结束（包括j）的子串
+  2）[i,j]是否为回文串，既要取决于s[i] == s[j]，也要取决于[i+1,j-1]是否为回文串
+  3）举例：abccb，对于[1,4]为bccb，要先判断s[1] == s[4]，再判断 [2,3]是否为回文串
+  4）考虑边界条件：当只有一个字符时一定为回文串；两个字符时，如果s[i] == s[j], 则[i,j]也为回文串
+ 参考精选解答（思路清晰便于回顾复习）：https://leetcode-cn.com/problems/longest-palindromic-substring/solution/zhong-xin-kuo-san-dong-tai-gui-hua-by-liweiwei1419/）
+  
+3.代码:
+  public String longestPalindrome(String s) {
+        int len = s.length();
+        if (len < 2) return s;
+        int start = 0;
+        int maxLen = 1;
+        char[] chars = s.toCharArray();
+        boolean[][] dp = new boolean[len][len];
+        for (int j = 1; j < len; j++) {
+            for (int i = 0; i < j; i++) {
+                if (chars[i] != chars[j]) dp[i][j] = false;
+                else {
+                    if (j - i < 3) dp[i][j] = true;
+                    else dp[i][j] = dp[i + 1][j - 1];
+                }
+                if (dp[i][j] && j - i + 1 > maxLen) {
+                    start = i;
+                    maxLen = j - i + 1;
+                }
+            }
+        }
+        return s.substring(start, start + maxLen);
+    }

@@ -1,0 +1,92 @@
+1.题目描述:
+  64 最小路径和 : https://leetcode-cn.com/problems/minimum-path-sum/
+  62 不同路径：https://leetcode-cn.com/problems/unique-paths/
+  63 不同路径2 ：https://leetcode-cn.com/problems/unique-paths-ii/
+ 
+  
+ 64题：
+  思路: 动态规划。以上三个题类似，思路一致
+    1）第一行每个位置只能由其左边转移，和第一列只能由正上方转移
+    2）其他位置元素均可由正上和左边元素转移，即dp[i][j] = min( dp[i-1][j], dp[i][j-1] )
+    
+    代码:
+     public int minPathSum(int[][] grid) {
+        int row = grid.length;
+        int col = grid[0].length;
+        int[][] dp = new int[row][col];
+        // 对第一行进行预处理
+        dp[0][0] = grid[0][0];
+        for(int i = 1; i < col; i++){
+            dp[0][i] = dp[0][i-1] + grid[0][i]; 
+        }
+        // 对第一列进行初始化
+        for(int i = 1; i < row; i++){
+            dp[i][0] = dp[i-1][0] + grid[i][0];
+        }
+        // 对剩下的元素进行处理
+        for(int i = 1; i < row ; i++){
+            for(int j = 1; j < col; j++){
+                dp[i][j] = Math.min(dp[i-1][j],dp[i][j-1]) + grid[i][j];
+            }
+        }
+        return dp[row-1][col-1];
+    }
+    
+62题：
+  思路:
+    1）到达第一行和第一列的每个元素，都只有一条路径
+    2）其他位置元素均可由正上和左边元素转移，所有dp[i][j] = dp[i-1][j] + dp[i][j-1]
+  代码:
+      public int uniquePaths(int m, int n) {
+        int[][] dp = new int[m][n];
+        // 初始化第一行,每一个位置都只有一条路径
+        for(int i = 0; i < n; i++){
+            dp[0][i] = 1;
+        }
+        // 初始化第一列，每一个位置都只有一条路径
+        for(int i = 0; i < m; i++){
+            dp[i][0] = 1;
+        }
+        // 对其他元素进行处理，位置dp[i][j] = dp[i - 1][j] + dp[i][j - 1]
+        for(int i = 1; i < m; i++){
+            for(int j = 1; j < n; j++){
+                dp[i][j] = dp[i][j-1] + dp[i-1][j];
+            }
+        }
+        return dp[m-1][n-1];
+    }
+    
+ 63：
+  思路：
+    1）若某一位置有障碍物，表明该位置不可达到，可以设该位置dp[i] = 0;当该位置需要向其他位置转移时，由于该位置dp[i] 为0，表明当前位置无路径或路径数为0
+    2）当第一行和第一列中某个位置有障碍物，则后续 位置均不可到达
+    3）其他位置元素均可由正上和左边元素转移，所有dp[i][j] = dp[i-1][j] + dp[i][j-1]
+  代码:
+   public int uniquePathsWithObstacles(int[][] obstacleGrid) {
+        int row = obstacleGrid.length;
+        int col = obstacleGrid[0].length;
+        int[][] dp = new int[row][col];
+        // 对第一行初始化
+        if(obstacleGrid[0][0] == 1) return 0;
+        dp[0][0] = 1;
+        for(int i = 1; i < col; i++){
+            if(obstacleGrid[0][i] == 1) dp[0][i] = 0;
+            else dp[0][i] = dp[0][i-1]; 
+        }
+        // 对第一列初始化
+        for(int i = 1; i < row; i++){
+            if(obstacleGrid[i][0] == 1) dp[i][0] = 0;
+            else dp[i][0] = dp[i-1][0];
+        }
+        // 对其他元素初始化
+        for(int i = 1; i < row; i++){
+            for(int j = 1; j < col; j++){
+                if(obstacleGrid[i][j] == 1) dp[i][j] = 0;
+                else{
+                    dp[i][j] = dp[i-1][j] + dp[i][j-1];
+                }
+            }
+        }
+        return dp[row-1][col-1];
+    }
+ 

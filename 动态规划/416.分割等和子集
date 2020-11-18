@@ -23,6 +23,8 @@
 解释: 数组不能分割成两个元素和相等的子集.
 
 2.总体思路：
+  官方解答：https://leetcode-cn.com/problems/partition-equal-subset-sum/solution/fen-ge-deng-he-zi-ji-by-leetcode-solution/
+  高票解答：https://leetcode-cn.com/problems/partition-equal-subset-sum/solution/0-1-bei-bao-wen-ti-xiang-jie-zhen-dui-ben-ti-de-yo/
   1）首先做一些简单判断：
     1.1）数组length < 2，则不可能拆分返回false
     1.2）数组所有元素和为sum，令target = sum/2，则问题可以转换为能否选取数组部分元素使其和为target

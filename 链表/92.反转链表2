@@ -1,0 +1,73 @@
+1.题目描述：https://leetcode-cn.com/problems/reverse-linked-list-ii/
+  反转从位置 m 到 n 的链表。请使用一趟扫描完成反转。
+
+  说明:
+  1 ≤ m ≤ n ≤ 链表长度。
+
+  示例:
+
+  输入: 1->2->3->4->5->NULL, m = 2, n = 4
+  输出: 1->4->3->2->5->NULL
+
+2.思路：如代码
+    主要考虑m是否为第一个元素：
+      如果m为第一个元素，则对m+1个元素进行头插
+      如果m不为第一个元素，则要先记录m-1位置的结点，再进行头插
+3.代码:
+      public ListNode reverseBetween(ListNode head, int m, int n) {
+        // 第一种情况 m = n： 直接返回
+        if(m == n)return head;
+        // 第二种情况: m 为第一个元素
+        ListNode start,p,nextP,newHead;
+        int i = 1;
+        if(m == 1){
+            // 直接开始头插法
+            newHead = head; 
+            p = head.next;
+            i++;
+            // 处理m到n-1个元素，第n个元素单独处理
+            while(i < n){
+                nextP = p.next;
+                p.next = newHead;
+                newHead = p;
+                p = nextP;
+                i++;
+            }
+            // 单独处理第n个元素,此时p指向第n个元素
+            head.next =  p.next;
+            p.next = newHead; 
+            newHead =p;
+            return newHead;
+        }
+        // 第三种情况：m不为第一个元素
+        else{
+            // 1.首先找到第m-1个元素
+            i = 1;
+            p = head;
+            while(i < m-1){
+                p = p.next;
+                i++;
+            }
+            // 记录第m-1个元素
+            start = p;
+            // 第m个元素为本次头插法的头
+            newHead = start.next;
+            // 从m+1个元素开始头插法
+            i = i+2;
+            p = newHead.next;
+            while(i < n){
+                nextP = p.next;
+                p.next = newHead;
+                newHead = p;
+                p = nextP;
+                i++;
+            }
+            // 单独处理第n个元素,此时p指向第n个元素
+            // 应该让
+            start.next.next =  p.next;
+            p.next = newHead; 
+            start.next = p;
+            return head;
+        }
+
+    }

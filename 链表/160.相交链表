@@ -1,0 +1,64 @@
+1.题目描述:https://leetcode-cn.com/problems/intersection-of-two-linked-lists/
+  编写一个程序，找到两个单链表相交的起始节点。
+
+  注意：
+  如果两个链表没有交点，返回 null.
+  在返回结果后，两个链表仍须保持原有的结构。
+  可假定整个链表结构中没有循环。
+  程序尽量满足 O(n) 时间复杂度，且仅用 O(1) 内存。
+ 
+2.思路:
+  1）若两个链表相交，则从相交点开始到结束，链表节点都一样
+  2）设链表a的长度为len1，链表b的长度为len2
+  3）那么从|len1 - len2|的位置出发，一定能到达交点处，到达不了说明没有交点
+  4）思考：
+    两个链表同时从交点往前走，走到其中一个个结束（到达头指针），另外一个还有剩余，且剩余长度是|len1 - len2|；
+    那么直接让长度长的那个链表先走|len1 - len2|,这个时候短的链表出发，必定在交点处想遇
+ 
+3.代码：
+public ListNode getIntersectionNode(ListNode headA, ListNode headB) {
+        if(headA == null || headB == null) return null;
+        ListNode tempA = headA;
+        ListNode tempB = headB;
+        int lenA = len(headA);
+        int lenB = len(headB);
+        if(lenA>lenB){
+            for(int i = 0;i < lenA-lenB;i++){
+                tempA = tempA.next;
+            }
+            while(tempA != null){
+                if(tempA == tempB) return tempA;
+                else {
+                    tempA = tempA.next;
+                    tempB = tempB.next;
+                }
+            }
+            return null;
+        }
+        else{
+            for(int i = 0; i < lenB - lenA;i++){
+                tempB = tempB.next;
+            }
+            while(tempA != null){
+                if(tempA == tempB) return tempA;
+                else {
+                    tempA = tempA.next;
+                    tempB = tempB.next;
+                }
+            }
+            return null;
+        }
+
+
+        
+    }
+    public static int len(ListNode head){
+        int i = 0;
+        while(head!=null){
+            i++;
+            head=head.next;
+        }
+        return i;
+    }
+
+

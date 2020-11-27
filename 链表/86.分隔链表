@@ -1,0 +1,38 @@
+1.题目描述：https://leetcode-cn.com/problems/partition-list/
+  给定一个链表和一个特定值 x，对链表进行分隔，使得所有小于 x 的节点都在大于或等于 x 的节点之前。
+
+  你应当保留两个分区中每个节点的初始相对位置。
+  
+2.思路:
+  1)初始化两个结点，一个指向大于等于x的，一个指向小于x的，最后把两个结点相连
+  
+3.代码：
+      public ListNode partition(ListNode head, int x) {
+        // 设置两个链表一个大于等于x，一个小于x
+        ListNode max = new ListNode(0);
+        ListNode maxHead = max;
+        ListNode min = new ListNode(0);
+        ListNode minHead = min;
+        ListNode temp = head;
+        while(temp != null){
+            // 小于x则加入到min链表
+            if(temp.val < x ){
+                min.next = temp;
+                min = temp;
+                temp = temp.next;
+                min.next = null;
+                
+            }
+            else{
+                // 加入到max链表
+                max.next = temp;
+                max = temp;
+                temp = temp.next;
+                max.next = null;
+        
+            }
+    
+        }
+        min.next = maxHead.next;
+        return minHead.next;
+    }

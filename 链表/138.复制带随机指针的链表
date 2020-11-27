@@ -1,0 +1,49 @@
+1.题目描述：https://leetcode-cn.com/problems/copy-list-with-random-pointer/
+  给定一个链表，每个节点包含一个额外增加的随机指针，该指针可以指向链表中的任何节点或空节点。
+
+  要求返回这个链表的 深拷贝。 
+
+  我们用一个由 n 个节点组成的链表来表示输入/输出中的链表。每个节点用一个 [val, random_index] 表示：
+
+  val：一个表示 Node.val 的整数。
+  random_index：随机指针指向的节点索引（范围从 0 到 n-1）；如果不指向任何节点，则为  null 。
+  
+2.思路：
+  1）利用ArrayList这个数据结构，新建两个list（第一个为原链表，第二个为深拷贝的链表），每次遍历就把原链表的结点add进list1，这就保证了list1中结点相对位置不变，相当于从链表变成了数组
+  2）因为要深拷贝，所以要重新new结点，每次访问原链表中的结点就new一个新结点并加入list2中
+  3）对于new的结点，一次循环设置val的值
+  4）第二次循环，利用list.get(i).next = list.get(i+1)来设置next域的值
+  5）第三次循环，先找到list.get(i).random所代表的位置的索引，即list.indexOf(list.get(i).random)，设这个索引值为index，代表的该结点的random在数组中的相对位置，那么在list2中其相对位置也是这个index，
+  循环一次就能找到所有的random域
+  
+3.代码：
+    public Node copyRandomList(Node head) {
+        if(head == null) return null;
+        Node p = head;
+        List<Node> list1 = new ArrayList<>();
+        List<Node> list2 = new ArrayList<>();
+        // 处理所有结点的val值
+        while(p != null){
+            list1.add(p);
+            Node node = new Node(p.val);
+            list2.add(node);
+            p = p.next;
+        }
+        p = head;
+        // 处理前size-1个结点的next值
+        for(int i = 0; i < list2.size()-1;i++){
+            list2.get(i).next = list2.get(i+1);
+        }
+        // 特殊处理最后一个结点
+        list2.get(list2.size()-1).next = null;
+        p = head;
+        for(int i = 0; i < list2.size(); i++){
+            Node s = list1.get(i).random;
+            if(s != null){
+                int index = list1.indexOf(s);
+                list2.get(i).random = list2.get(index);
+            }
+            else list2.get(i).random = null;
+        }
+        return list2.get(0);  
+    }

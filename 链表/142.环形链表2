@@ -1,0 +1,40 @@
+1.题目描述：https://leetcode-cn.com/problems/linked-list-cycle-ii/
+  给定一个链表，返回链表开始入环的第一个节点。 如果链表无环，则返回 null。
+  为了表示给定链表中的环，我们使用整数 pos 来表示链表尾连接到链表中的位置（索引从 0 开始）。 如果 pos 是 -1，则在该链表中没有环。注意，pos 仅仅是用于标识环的情况，并不会作为参数传递到函数中。
+
+2.思路:
+  1）首先判断是否有环，方法如lc141环形链表
+  2）可以证明一个指针从相遇点出发，一个从头出发，一定会在环的入口想遇。（自己看题解证明如下）
+  https://leetcode-cn.com/problems/linked-list-cycle-ii/solution/ji-ju-hua-jiang-ming-kuai-man-zhi-zhen-by-darin-ld/
+
+3.代码:
+      public ListNode detectCycle(ListNode head) {
+        if(head == null) return null;
+        ListNode qNode = head; // 快指针
+        ListNode sNode = head; // 慢指针
+        ListNode q;
+        while(true){
+            sNode = sNode.next;
+            if(qNode.next != null){
+                
+                qNode = qNode.next;
+                if(qNode.next != null){
+                    qNode = qNode.next;
+                }
+                else return null;
+            }
+            // 为空表示一定没有相遇点
+            else return null;
+            if(sNode == qNode) {
+                // 找到相遇点
+                break;
+            }
+        }  
+        // 让一个从相遇到出发，一个从head出发，再次想遇就是相遇点
+        qNode = head;
+        while(sNode != qNode){
+            qNode = qNode.next;
+            sNode = sNode.next;
+        }
+        return sNode;
+    }

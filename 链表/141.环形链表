@@ -1,0 +1,32 @@
+1.题目描述：https://leetcode-cn.com/problems/linked-list-cycle/
+  给定一个链表，判断链表中是否有环。
+
+  如果链表中有某个节点，可以通过连续跟踪 next 指针再次到达，则链表中存在环。 为了表示给定链表中的环，我们使用整数 pos 来表示链表尾连接到链表中的位置（索引从 0 开始）。 如果 pos 是 -1，则在该链表中没有环。注意：pos 不作为参数进行传递，仅仅是为了标识链表的实际情况。
+
+  如果链表中存在环，则返回 true 。 否则，返回 false 。
+
+ 2.双指针:
+  1)设置快慢指针：一个每次走一步，另外一个每次走两步
+  2）如果能想遇就表明存在环，否则没有环
+  思考：
+    1）为什么想遇表明有环？
+      因为无环则快指针永远在前面，不可能与慢指针相遇。
+    2）如果考虑位置关系，可以假想快指针先慢指针后面（无论是什么相对位置，因为是个环，都可以看作快指针在慢指针后面），那么快指针要追慢指针
+      假设快指针不停追赶慢指针，那么追赶到最后的只有两种情况：
+        1）快指针下一个结点就是慢指针，
+        2）快指针下一个结点的下一个结点是慢指针
+      对于上述第一种情况，快慢指针再走一次就能想遇；第二种情况快慢指针各走一次就到达了第一种情况，那么再走一次也能想遇。所有无论如何都会相遇
+  
+ 
+ 3.代码:
+      public boolean hasCycle(ListNode head) {
+        ListNode sNode = head;
+        ListNode qNode = head;
+        while(qNode != null){
+            sNode = sNode.next;
+            if(qNode.next != null) qNode = qNode.next.next;
+            else return false;
+            if(qNode == sNode && sNode != null ) return true;
+        }
+        return false;
+    }

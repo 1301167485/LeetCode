@@ -1,0 +1,47 @@
+1.题目描述：https://leetcode-cn.com/problems/min-stack/
+
+2.思路：辅助栈
+  1）第一次做直接模拟，记录最小值，出错了！因为不断记录并更新最小值，pop的时候如果最小值已经弹出，那么最小值应该变化。
+  2）利用辅助栈
+  4）设置两个栈，一个记录每次正常的栈操作stack，一个用来记录最小值minStack
+  5）正常操作的栈不用说，主要说说记录最小值的栈：让stack与minStack保持同步操作
+  6）每次要push一个元素x，stack直接push，minStack则要判断x是否比当前minStack栈顶元素小，如果x小于栈顶则直接push进minStack，如果x不小于栈顶说明压栈x进stack后并不是stack中最小值，且stack
+  中的最小值一定是minStack栈顶元素。
+  7）通俗点就是说，每次push时都给minStack中push的都是当前栈的最小值，一个元素x如果不是当前栈中最小的元素，则最小的元素（即栈顶元素）进minStack。
+
+3.代码：
+  class MinStack {
+    private Stack<Integer> stack;
+    private Stack<Integer> minStack;                                                                                                                                                                                                                                                                                                                                                                                                                                                            structure here. */
+    public MinStack() {
+        this.stack = new Stack();
+        this.minStack = new Stack();
+    }
+
+    
+    public void push(int x) {
+        if(this.stack.isEmpty()){
+            this.stack.push(x);
+            this.minStack.push(x);    
+        }
+        else{
+            this.stack.push(x);
+            this.minStack.push(Math.min(this.minStack.peek(),x));
+        }
+        
+    }
+    
+    public void pop() {
+        this.stack.pop();
+        this.minStack.pop(); 
+
+    }
+    
+    public int top() {
+        return stack.peek();
+    }
+    
+    public int getMin() {
+        return this.minStack.peek();
+    }
+}

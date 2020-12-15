@@ -1,0 +1,66 @@
+1.题目描述:https://leetcode-cn.com/problems/candy/
+  老师想给孩子们分发糖果，有 N 个孩子站成了一条直线，老师会根据每个孩子的表现，预先给他们评分。
+
+  你需要按照以下要求，帮助老师给这些孩子分发糖果：
+
+  每个孩子至少分配到 1 个糖果。
+  相邻的孩子中，评分高的孩子必须获得更多的糖果。
+  那么这样下来，老师至少需要准备多少颗糖果呢？
+
+  示例 1:
+
+  输入: [1,0,2]
+  输出: 5
+  解释: 你可以分别给这三个孩子分发 2、1、2 颗糖果。
+  示例 2:
+
+  输入: [1,2,2]
+  输出: 4
+  解释: 你可以分别给这三个孩子分发 1、2、1 颗糖果。
+       第三个孩子只得到 1 颗糖果，这已满足上述两个条件。
+
+
+2.思路：https://leetcode-cn.com/problems/candy/solution/candy-cong-zuo-zhi-you-cong-you-zhi-zuo-qu-zui-da-/
+  大佬的思路太清晰了，总结如下：
+    1）A、B两个学生，A在左、B在右
+      左规则：ratingsB > ratingsA，则B比A发的糖果多
+      右规则：ratingsA > ratingsB，则A比B发的糖果多
+    2）先从左至右遍历学生成绩 ratings，按照以下规则给糖，并记录在 left 中：
+     （1）先给每个学生一颗糖
+     （2）如果ratings[i] > ratings[i-1]，则left[i] = left[i-1] + 1;
+     （3）如果ratings[i] <= ratings[i-1]，则什么也不做
+     以上遍历完后，满足了左规则
+    3）从右往左遍历学生成绩ratings，按照以下规则给糖，并记录在right中：
+     （1）先给学生一颗糖；
+     （2）如果ratings[i] > ratings[i+1]，则right[i] = rigth[i+1] + 1;
+     （3）如果ratings[i] <= ratings[i+1]，则什么也不做；
+     以上遍历完后，满足了右规则
+    4）最终，取以上 2 轮遍历 left 和 right 对应学生糖果数的 最大值 ，这样则 同时满足左规则和右规则 ，即得到每个同学的最少糖果数量。
+    
+   注意：
+    1)为什么要取二者的最大值（即取left和right中的最大值）：left是满足左规则的最优解、right是满足右规则的最优解，要同时满足左规则和右规则，就只能取二者最大值。
+    2）为什么这样做的就是题目要的最优解：首先，满足题目要求的发糖方法，必定同时满足左规则和右规则；反之，满足左规则和右规则的方糖方法也复合题目要求，但不是最优的解；
+    那么什么是最优解，显然满足左规则的最优解，同时满足右规则的最优解，正如上面所言取最大值
+  
+3.代码：
+    public int candy(int[] ratings) {
+        // 左规则:
+        int[] left = new int[ratings.length];
+        for(int i = 0; i < ratings.length; i++) left[i] = 1;
+        for(int i = 1; i < ratings.length; i++){
+            if(ratings[i] > ratings[i-1]) left[i] = left[i-1]+1;
+        }
+        int[] right = new int[ratings.length];
+        for(int i = 0; i < ratings.length; i++) right[i] = 1;
+        for(int i = ratings.length-2; i >= 0; i--){
+            if(ratings[i] > ratings[i+1]) right[i] = right[i+1]+1;
+        }
+        int res = 0;
+        for(int i = 0; i < ratings.length; i++){
+            res += Math.max(left[i],right[i]);
+        }
+        return res;
+    }
+     
+     
+     

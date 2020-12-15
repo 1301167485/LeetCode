@@ -55,7 +55,8 @@
     4）那如何判断什么时候跳出循环呢？我们可以设置一个count，初始化为0，每经过一共加油站后如果sum >= 0，说明可以达到该加油站，那么count++，如果能够到达所有的加油站，
        那么count == length，此时满足要求，直接跳出循环即可
     
- 3.代码：    public int canCompleteCircuit(int[] gas, int[] cost) {
+ 3.代码：   
+      public int canCompleteCircuit(int[] gas, int[] cost) {
         // 实际上只需要计算剩余油量tem  + gas[i] - cost[i]是否大于0，大于0说明当前油量+加油站的油大于消耗
         // 1.因为初始油量为0，所以第一个加油站一定满足gas[i] > cost[i]
         int sum = 0; // 表示当前油量

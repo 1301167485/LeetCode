@@ -1,0 +1,77 @@
+1.题目描述：https://leetcode-cn.com/problems/monotone-increasing-digits/
+  给定一个非负整数 N，找出小于或等于 N 的最大的整数，同时这个整数需要满足其各个位数上的数字是单调递增。
+
+（当且仅当每个相邻位数上的数字 x 和 y 满足 x <= y 时，我们称这个整数是单调递增的。）
+
+示例 1:
+
+输入: N = 10
+输出: 9
+示例 2:
+
+输入: N = 1234
+输出: 1234
+示例 3:
+
+输入: N = 332
+输出: 299
+说明: N 是在 [0, 10^9] 范围内的一个整数。
+
+
+
+2.思路:
+  1）对每一个数按从左到右画一个折线图，如1234，对应的四个点分别为（1，1）（2，2）（3，3）（4.4）
+  2）他们的纵坐标代表每一位的值，可以看出当某一时刻纵坐标的值下降，那么这个数就不满足要求，需要修改。
+  3）那么如何修改？对应折线图，显然第一个下降点下的前一个拐点，比如123444433333，下降的点在X处：1234444X33333，那么需要修改的就是第一个4：123344433333，并且要把修改后
+  的都变成9，即12339999999.
+  4）理解不了就在草稿纸上自己画一画
+
+3.代码（自己ace的，总算自己做了一道出来了，代码有点乱）
+   public int monotoneIncreasingDigits(int N) {
+        String str = Integer.toString(N);
+        int len = str.length();
+        int error = -1;
+        // 找到第一个下降点的点
+        for(int i = 0; i < len-1; i++){
+            if(str.charAt(i) - str.charAt(i+1) > 0) {
+                error = i;
+                break;
+            }
+        }
+        if(error == -1) return N;
+        else{
+            //找到了第一个下降式数字
+            // 找要修改的数字的位置：从后往前找第一个下降的数字
+            int temp = error;
+            for(int i = error-1;i >= 0; i--){
+                if(str.charAt(i) - str.charAt(i+1) < 0){
+                    temp = i+1;
+                    break;
+                }
+                if(i == 0) temp = 0;
+            }
+            int x = str.charAt(temp) - '0';
+            x--;
+            String result = str.substring(0,temp);
+            result += Integer.toString(x);
+            String string = "";
+            for(int i = temp+1; i < len; i++){
+                string += "9";
+            }
+            return Integer.parseInt(result+string);
+        }
+4.代码(官方代码：思路一致，代码规范)
+      public int monotoneIncreasingDigits(int N) {
+        char[] chars = Integer.toString(N).toCharArray();
+        // 找到第一个下降点
+        int i = 1;
+        while(i<chars.length && chars[i] >= chars[i-1]) i++;
+        if(i != chars.length){
+            // 找到第一个下降点的前一个拐点
+            while(i > 0 && chars[i-1] >= chars[i]) i--;
+            
+            chars[i] = --chars[i];
+            for(i = i+1; i < chars.length; i++) chars[i] = '9';
+        }
+        return Integer.parseInt(new String(chars));
+     }

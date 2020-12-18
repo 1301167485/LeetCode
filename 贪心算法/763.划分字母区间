@@ -52,3 +52,23 @@
     }
 }
 
+4.代码2（时隔两个月碰到这道题，独立ace掉）
+    public List<Integer> partitionLabels(String S) {
+        Map<Character,Integer> map = new HashMap<>();
+        char[] chars = S.toCharArray();
+        for(int i = 0; i < chars.length; i++) map.put(chars[i],i);
+        List<Integer> res = new ArrayList<>();
+        int start = 0;
+        int end = map.get(chars[0]);
+        int max = end;
+        for(int i = 0; i < chars.length; i++){
+            max = Math.max(map.get(chars[i]),max);
+            if(i == max){
+                res.add(max-start+1);
+                start = max + 1;
+                
+            }
+        }
+        return res;
+    }
+

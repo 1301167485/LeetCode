@@ -88,7 +88,7 @@
   }
   
 
-思路3：位运算
+思路3：位运算：https://leetcode-cn.com/problems/subsets/solution/hui-su-wei-yun-suan-di-gui-deng-gong-4chong-fang-s/
 （1）数组中的每一个数字都有选和不选两种状态，我们可以用0和1表示，0表示不选，1表示选择。如果数组的长度是n，那么子集的数量就是2^n。比如数组长度是3，就有8种可能，分别是
    如果nums = [1，2，3]
    

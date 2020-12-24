@@ -1,0 +1,50 @@
+https://leetcode-cn.com/problems/implement-strstr/
+
+1.题目描述
+  实现 strStr() ：函数。
+
+  给定一个 haystack 字符串和一个 needle 字符串，在 haystack 字符串中找出 needle 字符串出现的第一个位置 (从0开始)。如果不存在，则返回  -1。
+
+  示例 1:
+
+  输入: haystack = "hello", needle = "ll"
+  输出: 2
+  示例 2:
+
+  输入: haystack = "aaaaa", needle = "bba"
+  输出: -1
+
+2.思路：双指针（i为haystack，j为needle）
+  1）相同就同时+1；
+  2）不相同就i+1，j = 0；
+  然后就会tmd报错！为什么呢？
+  1）比如aaaaaaaab,aaab；开始比较时，如果相同就两个都+1，那么两个都跳过三个a，这个时候不同了，i应该回到第二个a开始重新对比！
+  So，相同就一直往下比较，不同的话i应该回到刚刚开始比较的下一个。
+ 
+3.代码:
+class Solution {
+    public int strStr(String haystack, String needle) {
+        if(needle.length() == 0) return 0;
+        int i = 0;
+        int j = 0;
+        int temp = i;
+        int res = -1;
+        boolean flag = true;
+        while(i < haystack.length()){
+            if(haystack.charAt(i) == needle.charAt(j)){
+                temp = i; // 记录第一次比较的位置，用作替换i
+                res = i;  // 记录第一次比较的位置，
+                while(haystack.charAt(temp) == needle.charAt(j)){
+                    if(++j == needle.length()) return res;
+                    temp++;
+                    if(temp == haystack.length()) return -1;   // 如果haystack太短，返回-1；
+                }
+            }
+            i++;
+            j=0;
+
+        }
+        return -1;
+
+    }
+}

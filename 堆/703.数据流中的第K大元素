@@ -1,0 +1,67 @@
+https://leetcode-cn.com/problems/kth-largest-element-in-a-stream/
+1.题目描述：
+  设计一个找到数据流中第 k 大元素的类（class）。注意是排序后的第 k 大元素，不是第 k 个不同的元素。
+
+  请实现 KthLargest 类：
+
+  KthLargest(int k, int[] nums) 使用整数 k 和整数流 nums 初始化对象。
+  int add(int val) 返回当前数据流中第 k 大的元素。
+
+
+  示例：
+
+  输入：
+  ["KthLargest", "add", "add", "add", "add", "add"]
+  [[3, [4, 5, 8, 2]], [3], [5], [10], [9], [4]]
+  输出：
+  [null, 4, 5, 5, 8, 8]
+
+  解释：
+  KthLargest kthLargest = new KthLargest(3, [4, 5, 8, 2]);
+  kthLargest.add(3);   // return 4
+  kthLargest.add(5);   // return 5
+  kthLargest.add(10);  // return 5
+  kthLargest.add(9);   // return 8
+  kthLargest.add(4);   // return 8
+
+
+  提示：
+  1 <= k <= 104
+  0 <= nums.length <= 104
+  -104 <= nums[i] <= 104
+  -104 <= val <= 104
+  最多调用 add 方法 104 次
+  题目数据保证，在查找第 k 大元素时，数组中至少有 k 个元素
+ 
+2. 思路: 这题要仔细读题，看清题目要的是第K个数，我们转换成小顶堆只需要保存前K个数即可。不需要每个数都存储，然后找第K个！！
+  1)题目只要第K个数
+  2）设置一个小顶堆，用来存储前K个数
+  3）小顶堆中第一个数就第K大小的数
+  4）如果小顶堆的size不足K，就之间插入
+  5）如果小顶堆的size等于K，比较当前元素和堆顶元素大小；
+  6）如果当前元素小于堆顶元素，什么也不做；
+  7）如果当前元素大于堆顶元素，则删除堆顶元素，插入当前元素；
+  8）保证小顶堆中始终为前K个数的大小！
+  
+3. 代码：
+class KthLargest {
+    public PriorityQueue<Integer> queue;
+    public int k;
+    public KthLargest(int k, int[] nums) {
+        this.k = k;
+        queue = new PriorityQueue<>(k);
+        for(int i = 0; i < nums.length; i++){
+            add(nums[i]);
+        }
+    }
+    public int add(int val) {
+        if(this.queue.size() < k){
+            this.queue.offer(val);
+        }else if(val >= this.queue.peek()){
+            this.queue.poll();
+            this.queue.offer(val);
+        }
+        return this.queue.peek();
+    }
+}
+

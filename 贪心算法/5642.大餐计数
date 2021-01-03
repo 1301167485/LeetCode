@@ -1,0 +1,73 @@
+https://leetcode-cn.com/problems/count-good-meals/
+
+
+代码idea中能跑通过，leetcode中有问题；先保存着代码，后面再看
+
+思路：
+  1）new一个map，用来存放每个元素的出现次数
+  2）将数组分为两个集合，一个存储偶数、一个存储奇数；并且集合采用set，不要重复元素；
+  3）对每一个set进行操作，具体如下：
+  4）两层for遍历遍历set中的每个元素，如果相等就跳过；不相等就判断是否满足要求；
+  5）最后再遍历map，目的是找出两个相同的数是否能满足题目要求，比如2和2；
+
+class Solution {
+         public static int num = 1000000007;
+
+    public static int countPairs(int[] deliciousness) {
+        Map<Integer, Integer> map = new HashMap<Integer, Integer>();
+        Set<Integer> odd = new HashSet<>(); 
+        Set<Integer> even = new HashSet<>();
+        for (int i = 0; i < deliciousness.length; i++) {
+            if (deliciousness[i] % 2 == 0) even.add(deliciousness[i]);
+            else odd.add(deliciousness[i]);
+            if (map.containsKey(deliciousness[i])) map.put(deliciousness[i], map.get(deliciousness[i]) + 1);
+            else map.put(deliciousness[i], 1);
+        }
+
+        int res = 0;
+        res = judge(res, odd, map);
+        res = judge(res, even, map);
+        for (int key : map.keySet()) {
+            int temp = 1;
+            int value = map.get(key);
+            if (value > 1 && isGood(key, key)) {
+                for (int i = value; i > 0; i--) {
+                    temp = temp * i;
+                }
+                res =( res + temp)%num;
+            }
+
+        }
+        if(map.containsKey(0) && map.containsKey(1)){
+            res = (res + 2*map.get(0)*map.get(1))%num;
+        }
+        return (res / 2)%num;
+
+    }
+
+    public static int judge(int res, Set<Integer> set, Map<Integer, Integer> map) {
+        for (Integer num1 : set) {
+            for (Integer num2 : set) {
+                if (num1 == num2) continue;
+                if (isGood(num1, num2)) {
+                    int temp1 = map.get(num1);
+                    int temp2 = map.get(num2);
+                    res = (res + (temp1 * temp2)) % num;
+                }
+            }
+        }
+        return res;
+    }
+
+    public static boolean isGood(int x, int y) {
+        int temp = x + y;
+        if (temp == 1) return true;
+        if (temp == 0) return false;
+        while (temp != 1) {
+            if (temp % 2 == 1) return false;
+            else temp /= 2;
+        }
+        return true;
+    }
+
+}

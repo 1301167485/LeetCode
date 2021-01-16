@@ -31,9 +31,10 @@
   1 <= n <= 200
   1 <= rating[i] <= 10^5
  
-2.思路:暴力求解，三层for循环。
+2.思路1:暴力求解，三层for循环。
+思路2：枚举中间节点j，对于每一个中间节点j，只需要找到左边比节点j小的元素个数，和右边比j大的元素个数。
 
-3.
+3.代码1
    public static int numTeams(int[] rating) {
         int sum = 0;
         for (int i = 0; i < rating.length-2; i++) {
@@ -45,4 +46,30 @@
             }
         }
         return sum;
+    }
+  4. 代码2：
+  class Solution {
+    public int numTeams(int[] rating) {
+        int len = rating.length;
+        int res = 0;
+        for(int i = 1; i < len - 1; i++){
+            int left1 = 0;// 左边小 
+            int left2 = 0;// 左边大
+            int right1 = 0;// 右边大
+            int right2 = 0;// 左边小
+            int temp = rating[i];
+            for(int j = 0; j < i; j++){
+                if(temp > rating[j]) left1++;
+                else if(temp < rating[j]) left2++;
+            }
+            for(int j = i + 1; j < len; j++){
+                if(temp < rating[j]) right1++;
+                else if(temp > rating[j]) right2++;
+            }
+            res += left1 * right1;
+            res += left2 * right2;
+            
+        }
+        return res;
+
     }

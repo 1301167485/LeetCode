@@ -1,0 +1,39 @@
+https://leetcode-cn.com/problems/keys-and-rooms/
+
+
+1.思路：广度优先
+
+2.代码
+class Solution {
+    public boolean canVisitAllRooms(List<List<Integer>> rooms) {
+        Set<Integer> set = new HashSet<>();
+        Queue<Integer> queue = new LinkedList<>();
+        if(rooms.size() > 0){
+            // 如果房间数大于0，就把0号房间加入已访问的set
+            set.add(0);
+            if(rooms.get(0).size() > 0){
+                // 如果0号房间的size大于0，就把0号房间内的钥匙加入队列
+                for(int c : rooms.get(0)){
+                    queue.offer(c);
+                }
+            }
+        }
+        while(!queue.isEmpty()){
+            // 出队
+            int temp = queue.poll();
+            // 将该元素放入set中
+            if(!set.contains(temp)){
+                if(rooms.get(temp).size() > 0){
+                    for(int cur : rooms.get(temp)){
+                        if(!set.contains(cur))
+                        queue.offer(cur);
+                    }
+                }   
+            }
+            set.add(temp);
+            
+        }
+        return rooms.size() == set.size();
+
+    }
+}

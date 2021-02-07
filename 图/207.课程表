@@ -1,0 +1,44 @@
+https://leetcode-cn.com/problems/course-schedule/
+
+
+
+1.思路：广度优先
+
+2.代码:
+class Solution {
+    public boolean canFinish(int numCourses, int[][] prerequisites) {
+        // 入度表
+        int[] adjlist = new int[numCourses];
+        // 边表，大的List集合中工有numCourses个小集合，每个小集合的索引对应的是课程id，集合内为该课程所指向的所有课程！
+        List<List<Integer>> list = new ArrayList<>();
+        // 队列
+        Queue<Integer> queue = new LinkedList<>();
+        // 大集合list添加numCourses个小list
+        for(int i = 0; i < numCourses; i++){
+            list.add(new ArrayList());
+        }
+        // 填写入度表和边表
+        for(int[] p : prerequisites){
+            adjlist[p[0]]++;
+            list.get(p[1]).add(p[0]);
+        }
+        //入度表中为0的节点入队
+        for(int i = 0; i < numCourses; i++){
+            if(adjlist[i] == 0) queue.offer(i);
+        }
+        
+
+        // 广度遍历
+        while(!queue.isEmpty()){
+            // 队首元素出队
+            int temp = queue.poll();
+            // 课程数减一
+            numCourses--;
+            // 对当前课程的后续课程进行
+            for(int cur : list.get(temp)){
+                if(--adjlist[cur] == 0) queue.offer(cur);
+            }
+        }
+        return numCourses == 0;
+    }
+}

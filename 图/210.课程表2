@@ -1,0 +1,41 @@
+https://leetcode-cn.com/problems/course-schedule-ii/
+
+1.思路：广度优先
+
+2.代码
+class Solution {
+    public int[] findOrder(int numCourses, int[][] prerequisites) {
+        int[] res = new int[numCourses];
+        int tempNum = numCourses;
+        int flag = 0;
+        // 入度表
+        int[] adjlist = new int[numCourses];
+        // 集合list的索引代表课程id，其中的每个小集合代表该id所指向的课程id集合
+        List<List<Integer>> list = new ArrayList<>();
+        // 队列
+        Queue<Integer> queue = new LinkedList<>();
+        // 为入度表赋值
+        for(int[] p :prerequisites){
+            adjlist[p[0]]++;
+        }
+        // 初始化list
+        for(int i = 0; i < numCourses; i++){
+            list.add(new ArrayList());
+            if(adjlist[i] == 0) queue.offer(i);
+        }
+        for(int[] p : prerequisites){
+            list.get(p[1]).add(p[0]);
+        }
+        while(!queue.isEmpty()){
+            int temp = queue.poll();
+            res[flag++] = temp;
+            numCourses--;
+            for(int cur : list.get(temp)){
+                if(--adjlist[cur] == 0) queue.offer(cur);
+            }
+        }
+        return numCourses == 0 ? res : new int[0]; 
+        
+
+    }
+}

@@ -1,0 +1,66 @@
+https://leetcode-cn.com/problems/insert-interval/
+
+
+1.思路：参考官方解答：https://leetcode-cn.com/problems/insert-interval/solution/cha-ru-qu-jian-by-leetcode-solution/
+  前言：
+    1）对于区间S1={l1，r1}，S2={l2，r2}；
+    2）如果二者没有重叠，则要么l1 > r2，要么l2 > r1；两种情况分别对应S1在S2的右侧和左侧；
+    3）如果不满足2）中两种情况，则一定有重叠；重叠的二者的并集为{min(l1,l2)，max(r1,r2)}。
+  思路：
+    1）对于给定的区间X集合，当我们插入新的S={left，right}区间时，我们只需要：
+    2）找出所有与S重叠的区间X'，
+    2）将X'中的所有区间连带上区间 S 合并成一个大区间；
+    3）最终的答案即为不与 X'重叠的区间以及合并后的大区间。
+  具体操作：
+    1）当我们遍历到区间 [li, ri]时 ：
+    2）如果li > right，说明 [li, ri] 与 S 不重叠并且在其右侧，我们可以直接将 [li, ri][l]加入答案；
+    3）如果ri < left，说明 [li, ri] 与 S 不重叠并且在其左侧，我们可以直接将 [li, ri][l]加入答案；
+    4）如果不满足2）和3）的情况，说明有重叠，我们无需将 [li, ri] 加入答案。此时，我们需要将 S 与 [li, ri]合并，即将S更新为其与[li, ri]的并集。
+  补充：那么我们应当在什么时候将区间 SS 加入答案呢？
+    1）由于我们需要保证答案也是按照左端点排序的，因此当我们遇到第一个满足li >right 的区间时：
+    2）说明以后遍历到的区间不会与 S 重叠，并且它们左端点一定会大于S 的左端点。此时我们就可以将 S 加入答案。
+    3）特别地，如果不存在这样的区间，我们需要在遍历结束后，将 SS 加入答案。
+
+
+   
+2.代码:
+class Solution {
+    public int[][] insert(int[][] intervals, int[] newInterval) {
+       
+        int left = newInterval[0];
+        int right = newInterval[1];
+        // 设置一个list存放可以加入的区间，最后把list转换为int[][]作为结果返回即可。
+        List<int[]> list = new ArrayList<>();
+        // 设置一个标志位，来判定S是否已经加入了list
+        boolean flag = true;
+        for(int[] interval : intervals){
+            // 在新区间右侧
+            if(interval[0] > right){
+                // 如果是第一次发现在新区间的右侧，需要将S加入结果集list，并将标志位改为false
+                if(flag){
+                    list.add(new int[]{left,right});
+                    flag = false;
+                }
+                list.add(new int[]{interval[0],interval[1]});
+            }
+            // 在新区间左侧
+            else if(interval[1] < left){
+                list.add(new int[]{interval[0],interval[1]});
+            }
+            // 需要更新S区间 
+            else{
+                left = Math.min(left,interval[0]);
+                right = Math.max(right,interval[1]);
+            }
+        }
+        // 如果S没有加入结果集list，则现在加入。
+        if(flag){
+            list.add(new int[]{left,right});
+        }
+        int[][] res = new int[list.size()][2];
+        for(int i = 0; i < list.size(); i++){
+            res[i] = list.get(i);
+        }
+        return res;
+    }
+}

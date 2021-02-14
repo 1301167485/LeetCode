@@ -1,0 +1,53 @@
+https://leetcode-cn.com/problems/merge-intervals/
+
+1.思路：本题相当于在57题的插入区间上加点难度；
+  1）57题的插入是只插入一个一维数组；
+  2）这道题可以看作是插入多个一位数组；
+  3）只需调用多此57题的插入的代码即可；
+  4）还需要修改一下数据结构；
+  流程：
+  1）每次为插入排序传入一个list，和一个待插入的一维数组；其中list是已经排好序的数组集合，待插入的一位数组是下一个需要插入的一维数组；
+  2）调用插入排序，返回的结果是一个完成插入的list。
+  3）再将该list和下一个待插入的一维数组，调用插入排序。
+  4）直到所有一维数组完成插入。
+
+2.代码如下：
+class Solution {
+    public int[][] merge(int[][] intervals) {
+        List<int[]> res = new ArrayList<>();
+        for(int i = 0; i < intervals.length; i++){
+            res = insert(res,intervals[i]);
+        }
+        int[][] resArray = new int[res.size()][2];
+        for(int i = 0; i < res.size(); i++){
+            resArray[i][0] = res.get(i)[0];
+            resArray[i][1] = res.get(i)[1];
+        }
+        return resArray;
+    }
+    public List<int[]> insert(List<int[]> list, int[] newInterval) {
+        int left = newInterval[0];
+        int right = newInterval[1];
+        List<int[]> result = new ArrayList<>();
+        boolean flag = true;
+        for(int[] interval:list){
+            if(right < interval[0]){
+                if(flag){
+                    result.add(new int[]{left,right});
+                    flag = false;
+                }
+                result.add(new int[]{interval[0],interval[1]});
+            }else if(left > interval[1]){
+                result.add(new int[]{interval[0],interval[1]});
+            }else{
+                left = Math.min(left,interval[0]);
+                right = Math.max(right,interval[1]);
+            }
+        }
+
+        if(flag){
+            result.add(new int[]{left,right});
+        }
+        return result;
+    }
+}

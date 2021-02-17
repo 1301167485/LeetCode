@@ -1,0 +1,50 @@
+https://leetcode-cn.com/problems/k-closest-points-to-origin/
+
+
+1.思路：找前k个大或者前k个小，一般使用大顶堆或者小顶堆；
+ 1）建立一个大顶堆；
+ 2）依次遍历每个点；
+ 3）对于前K个点，直接加入堆中；
+ 4）对于后续的点，如果距离小于堆顶元素的距离，则弹出堆顶元素，将该元素加入堆中。
+
+2.代码：
+class Solution {
+    public int[][] kClosest(int[][] points, int K) {
+        PriorityQueue<int[]> maxHeap = new PriorityQueue<int[]>(K,new Comparator<int[]>(){ 
+            @Override
+            public int compare(int[] i1,int i2[]){
+                return i2[0] * i2[0] + i2[1] * i2[1] - i1[0] * i1[0] - i1[1] * i1[1];
+            }
+        });
+        for(int i = 0; i < points.length; i++){
+            if(i < K) maxHeap.offer(points[i]);
+            else{
+                int[] temp = maxHeap.peek();
+                if(points[i][0] * points[i][0] + points[i][1] * points[i][0] < temp[0] * temp[0] + temp[1] * temp[1]){
+                    maxHeap.poll();
+                    maxHeap.offer(points[i]);
+                } 
+            }
+        }
+        int[][] res = new int[maxHeap.size()][2];
+        for(int j = 0; j < maxHeap.size(); j++){
+            int[] temp = maxHeap.poll();
+            res[j][0] = temp[0];
+            res[j][1] = temp[1];
+        }
+        return res;
+    }
+}
+
+
+3.思路2：直接对数组排序，取前k个数。
+class Solution {
+public:
+    vector<vector<int>> kClosest(vector<vector<int>>& points, int K) {
+        sort(points.begin(), points.end(), [](const vector<int>& u, const vector<int>& v) {
+            return u[0] * u[0] + u[1] * u[1] < v[0] * v[0] + v[1] * v[1];
+        });
+        return {points.begin(), points.begin() + K};
+    }
+};
+

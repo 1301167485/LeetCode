@@ -1,0 +1,52 @@
+https://leetcode-cn.com/problems/binary-tree-zigzag-level-order-traversal/
+
+本题也可以归为图和广度优先遍历
+
+思路：其他与层序遍历相同；(参考官方解答)
+  1）这里用到了双端队列；
+  2）双端队列是一个可以在队列任意一端插入元素的队列。在广度优先搜索遍历当前层节点拓展下一层节点的时候我们仍然从左往右按顺序拓展，但是对当前层节点的存储我们维护一个变量 isOrderLeft ,记录是从左至右还是从右至左的：
+     如果从左至右，我们每次将被遍历到的元素插入至双端队列的末尾。
+     如果从右至左，我们每次将被遍历到的元素插入至双端队列的头部。
+  3）当遍历结束的时候我们就得到了答案数组。
+
+
+2. 代码:
+  注意点：
+    1）List的定义也可以选择LinkedList；
+    2）最后的ans.add()中可以直接new一个LinkedList并且将双端队列传入该LinkedList中。
+
+class Solution {
+    public List<List<Integer>> zigzagLevelOrder(TreeNode root) {
+        List<List<Integer>> ans = new LinkedList<List<Integer>>();
+        if (root == null) {
+            return ans;
+        }
+
+        Queue<TreeNode> nodeQueue = new LinkedList<TreeNode>();
+        nodeQueue.offer(root);
+        boolean isOrderLeft = true;
+
+        while (!nodeQueue.isEmpty()) {
+            Deque<Integer> levelList = new LinkedList<Integer>();
+            int size = nodeQueue.size();
+            for (int i = 0; i < size; ++i) {
+                TreeNode curNode = nodeQueue.poll();
+                if (isOrderLeft) {
+                    levelList.offerLast(curNode.val);
+                } else {
+                    levelList.offerFirst(curNode.val);
+                }
+                if (curNode.left != null) {
+                    nodeQueue.offer(curNode.left);
+                }
+                if (curNode.right != null) {
+                    nodeQueue.offer(curNode.right);
+                }
+            }
+            ans.add(new LinkedList<Integer>(levelList));
+            isOrderLeft = !isOrderLeft;
+        }
+
+        return ans;
+    }
+}

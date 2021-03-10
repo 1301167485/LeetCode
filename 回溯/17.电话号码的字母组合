@@ -1,0 +1,55 @@
+https://leetcode-cn.com/problems/letter-combinations-of-a-phone-number/
+
+1.思路：
+  1）先利用Map<Character,List<String>>的格式把数据存储起来，key为数字，value为对应的字母集合；
+  2）对所给定的String中每一个数字进行遍历；
+  3）如果当前第一次为结果集res加入元素，直接将数字对应的List全部加入结果集res；
+  4）如果结果集res中已经有元素，则先获取结果集res的size；（因为为结果集res添加元素后，结果集发生了变换，所以提前获取结果集res的size）；
+  5）对size内的每一个String元素，进行拼接；拼接的是给定数字的List中每一个字母；
+  6）最后删除前size个元素；
+ 
+ 
+2.代码：
+class Solution {
+    public List<String> letterCombinations(String digits) {
+              Map<Character,List<String>> map = new HashMap<>();
+        map.put('2',Arrays.asList("a","b","c"));
+        map.put('3',Arrays.asList("d","e","f"));
+        map.put('4',Arrays.asList("g","h","i"));
+        map.put('5',Arrays.asList("j","k","l"));
+        map.put('6',Arrays.asList("m","n","o"));
+        map.put('7',Arrays.asList("p","q","r","s"));
+        map.put('8',Arrays.asList("t","u","v"));
+        map.put('9',Arrays.asList("w","x","y","z"));
+        List<String> res = new ArrayList<>();
+        // 对每一个数字进行遍历
+        for(int i = 0; i < digits.length(); i++){
+            // 转换该数字char类型
+            char tempChar = digits.charAt(i);
+            // 获取该数字对应的String集合
+            List<String> tempList = map.get(tempChar);
+            // 如果第一次为res添加数据，直接将该集合中的数字逐个加入；
+            if(res.size() != 0){
+                int size = res.size();
+                for(int k = 0; k < tempList.size(); k++){
+                    for(int x = 0; x < size; x++){
+                        String str = res.get(x);
+                        str += tempList.get(k);
+                        res.add(str);
+                    }
+                }
+                // 删除前size个元素
+                for(int y = 0; y < size; y++){
+                    res.remove(0);  // 每次删除第0个元素即可，删除size次。
+                }
+                
+            }else{
+                // 如果第一次为res添加元素，直接添加即可。
+                for(int j = 0; j < tempList.size(); j++){
+                    res.add(tempList.get(j));
+                }
+            }
+        }
+        return res;
+    }
+}

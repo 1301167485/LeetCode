@@ -1,0 +1,36 @@
+https://leetcode-cn.com/problems/combination-sum/
+
+1.思路:回溯
+  1）每次递归都用target减去当前位置的值
+  2）target == 0，说明满足要求；
+  3）target < 0，说明不满足要求，直接reurn即可，对于后面的元素不需要遍历了。
+  4）如果数组遍历完了，直接return即可。
+  5）不选择当前值，
+  6）选择当前值。
+ 注：因为元素可以重复使用，所以选择当前值后的index，要保持不变，详见代码；
+ 
+ 
+2.代码:
+class Solution {
+    public List<List<Integer>> res = new ArrayList<>();
+    public List<List<Integer>> combinationSum(int[] candidates, int target) {
+    
+        backtrack(candidates,target,0,new ArrayList<Integer>());
+        return res;
+
+    }
+    public void backtrack(int[] candidates,int target,int index,List<Integer> list){
+        if(target < 0) return;
+        if(target == 0){
+            res.add(new ArrayList<Integer>(list));
+            return;
+        }
+        if(index == candidates.length) return;
+        // 不选当前数
+        backtrack(candidates,target,index + 1,list);
+        // 选当前数
+        list.add(candidates[index]);
+        backtrack(candidates,target-candidates[index],index,list);  // 因为元素可以重复使用，所以选择当前值后的index，要保持不变。
+        list.remove(list.size()-1);
+    }
+}

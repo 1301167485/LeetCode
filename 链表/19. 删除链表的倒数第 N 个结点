@@ -1,0 +1,35 @@
+https://leetcode-cn.com/problems/remove-nth-node-from-end-of-list/
+
+
+1.思路：
+  1）删除倒数第k个结点；
+  2）那么先让指针往后走k个结点；
+  3）然后新的指针从头出发，这个时候第二指针相对于第一个指针就是倒数第k个；
+  4）两个指针同时向后移动；
+  5）当第一个指针走到最后时，第二个指针就是倒数第k个结点；
+  6）删除即可。
+  注：注意删除时需要提前保存pre结点；
+  并注意如果删除的是头结点该如何处理。
+  
+  
+2.代码:
+class Solution {
+    public ListNode removeNthFromEnd(ListNode head, int n) {
+        int count = 1;
+        ListNode p = head;
+        while(count != n){
+            p = p.next;
+            count++;
+        }
+        ListNode del = head;
+        ListNode preDel = new ListNode(0,head);
+        while(p.next != null){
+            p = p.next;
+            preDel = del;
+            del = del.next;
+        }
+        preDel.next = del.next;
+        if(del == head) return head.next;  //如果删除的是头结点
+        return head;
+    }
+}
